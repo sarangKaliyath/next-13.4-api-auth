@@ -5,6 +5,8 @@ import bcrypt from 'bcrypt'
 import dbConnect from "../../utils/dbConnect";
 
 export async function POST(req){
+
+    
     const data = await req.json();
     const {email, password} = data;
     console.log({email, password})
@@ -24,21 +26,13 @@ export async function POST(req){
 
         if(!isValidPassword) return new Response("Invalid Password", {status: 401});
 
-
         const payload = {userId: user._id};
         
-        jwt.sign(
-            payload,
-            process.env.JWT_SECRET,
-            {
-                expiresIn: "2d"
-            },
-            (err, token) => {
-                if(err) throw new Error(err);
+        let token = jwt.sign({
+            data: payload
+          }, process.env.JWT_SECRET , {expiresIn: '1h'});
 
-                return new Response(token, {status: 200})
-            }
-        )
+        return new Response(JSON.stringify({token}) , {status: 200});
 
     } catch (error) {
         console.log(error);
