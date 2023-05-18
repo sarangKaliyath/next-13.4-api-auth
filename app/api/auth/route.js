@@ -9,7 +9,6 @@ export async function POST(req){
     
     const data = await req.json();
     const {email, password} = data;
-
     if(!isEmail(email)) return new Response('Invalid Email', {status: 401});
     
     if(password.length < 6) return new Response('Password Must be minimum 6 characters long!', {status: 401})
